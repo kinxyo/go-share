@@ -18,7 +18,13 @@ func main() {
 	}
 
 	mux := entry.RegisterRoutes()
-	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+
+	// Serve static files
+	fs := http.StripPrefix("/static/", http.FileServer(http.Dir("./static")))
+	http.Handle("/static/", fs)
+
+	// Main handler
+	http.Handle("/", mux)
 
 	ip := util.GetLocalIP()
 	log.Printf("Server started: http://%s:%d\n", ip, PORT)
